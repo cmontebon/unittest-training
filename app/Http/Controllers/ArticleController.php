@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
@@ -23,6 +24,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         $article->load('author');
+        $article->load('comments');
 
         return view('articles.show', compact('article'));
     }
@@ -39,12 +41,23 @@ class ArticleController extends Controller
         return redirect()->route('articles.show', $article);
     }
 
+    public function edit(Article $article)
+    {
+        if (!auth()->user()->can('update', $article)) {
+            abort(403);
+        }
+
+        return view('articles.edit', compact('article'));
+    }
+
     public function update(Article $article)
     {
-        $this->authorize('update', $article);
+        if (!auth()->user()->can('update', $article)) {
+            abort(403);
+        }
 
         $article = tap($article)->update(request()->all());
-
+        
         return redirect()->route('articles.show', $article);
     }
 }
