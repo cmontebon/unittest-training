@@ -24,18 +24,19 @@ class AddCommentTest extends TestCase
         $article = create(Article::class, [
             'user_id' => auth()->user()->id
         ]);
-        
+
         $comment = raw(Comment::class, [
             'user_id' => auth()->user()->id,
             'article_id' => $article->id
         ]);
 
         $this->post('/comments', $comment)
-            ->assertRedirect('/articles/1' . $article->id);
-        
+            ->assertRedirect("/articles/{$article->id}");
+
         $this->assertDatabaseHas('comments', [
             'user_id' => auth()->user()->id,
-            'article_id' => $article->id
+            'article_id' => $comment['article_id'],
+            'comment' => $comment['comment']
         ]);
     }
 }

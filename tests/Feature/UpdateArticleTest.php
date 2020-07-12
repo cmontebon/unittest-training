@@ -42,16 +42,23 @@ class UpdateArticleTest extends TestCase
     /** @test */
     public function author_can_only_update_his_articles()
     {
-        $user = create(User::class);
+        $user1 = create(User::class);
+        $user2 = create(User::class);
+
+        // sign in as user 1
+        $this->be($user1);
 
         $article = create(Article::class, [
-            'user_id' => $user->id
+            'user_id' => auth()->user()->id,
         ]);
 
         $updated = [
             'title' => 'Changed title',
             'content' => 'Changed content.',
         ];
+
+        // sign in as user 2
+        $this->be($user2);
 
         $this->patch("/articles/{$article->id}", $updated)
             ->assertStatus(Response::HTTP_FORBIDDEN);

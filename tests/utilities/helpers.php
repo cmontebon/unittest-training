@@ -14,3 +14,4 @@ function raw($class, $attributes = [], $count = null)
 {
     return factory($class, $count)->raw($attributes);
 }
+

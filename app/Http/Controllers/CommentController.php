@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     public function store(CommentRequest $request)
-    {   
+    {
         $comment = Comment::create([
             'comment' => $request->comment,
             'article_id' => $request->article_id,
@@ -17,5 +17,16 @@ class CommentController extends Controller
         ]);
 
         return redirect()->route('articles.show', $request->article_id);
+    }
+
+    public function destroy(Comment $comment)
+    {
+        if (!auth()->user()->can('delete', $comment)) {
+            abort(403);
+        }
+
+        Comment::find($comment->id)->delete();
+
+        return redirect()->route('articles.show', $comment->article_id);
     }
 }

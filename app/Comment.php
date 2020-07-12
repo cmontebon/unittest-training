@@ -8,13 +8,13 @@ class Comment extends Model
 {
     protected $guarded = [];
 
-    public function author() 
+    public function author()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function article()
     {
-        $this->belongsTo(Article::class);
+        return $this->belongsTo(Article::class);
     }
 }

@@ -6,6 +6,7 @@ use App\Article;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Comment;
 
 class ArticleController extends Controller
 {
@@ -23,8 +24,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load('author');
-        $article->load('comments');
+        $article->load(['author', 'comments']);
 
         return view('articles.show', compact('article'));
     }
@@ -57,7 +57,7 @@ class ArticleController extends Controller
         }
 
         $article = tap($article)->update(request()->all());
-        
+
         return redirect()->route('articles.show', $article);
     }
 }

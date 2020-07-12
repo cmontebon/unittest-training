@@ -13,15 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-// Route::view('create', 'articles.create');
-// Route::view('show', 'articles.show');
+Route::get('/', function() {
+    return redirect('/articles');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('articles', 'ArticleController@index')->name('articles.index');
@@ -30,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('articles/{article}', 'ArticleController@show')->name('articles.show');
     Route::get('articles/edit/{article}', 'ArticleController@edit')->name('articles.edit');
     Route::patch('articles/{article}', 'ArticleController@update')->name('articles.update');
+    Route::delete('comments/{comment}', 'CommentController@destroy')->name('comments.destroy');
 
-    Route::post('comments/create', 'CommentController@store')->name('comment.store');
+    Route::post('comments', 'CommentController@store')->name('comment.store');
 });
